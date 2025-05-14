@@ -1,6 +1,7 @@
 Flask
 Flask_SQLAlchemy
 Flask_Migrate
+Flask-WTF
 gunicorn
 psycopg2-binary
 email-validator
