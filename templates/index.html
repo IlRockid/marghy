@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Ancora CAS - Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card text-center">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0">Centro di Accoglienza Straordinaria "Ancora"</h2>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">Sistema di Gestione Ospiti</h4>
+                <p class="card-text">
+                    Benvenuti nel sistema di gestione degli ospiti del Centro Ancora CAS di Varazze.
+                    Questa piattaforma consente di registrare e gestire tutti gli ospiti presenti nella struttura.
+                </p>
+                <div class="mt-4">
+                    <a href="{{ url_for('guest_list') }}" class="btn btn-primary me-2">
+                        <i class="fas fa-users me-2"></i>Visualizza Ospiti
+                    </a>
+                    <a href="{{ url_for('create_guest') }}" class="btn btn-success">
+                        <i class="fas fa-user-plus me-2"></i>Registra Nuovo Ospite
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <!-- Statistiche principali -->
+    <div class="col-md-6 mb-4 mb-md-0">
+        <div class="card h-100">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Statistiche Generali</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="border-end">
+                            <h2 class="display-4">{{ total_guests }}</h2>
+                            <p class="mb-0">Ospiti Totali</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h2 class="display-4 text-warning">{{ expiring_soon }}</h2>
+                        <p class="mb-0">Permessi in Scadenza</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Azioni rapide -->
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Azioni Rapide</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="{{ url_for('create_guest') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-user-plus me-2"></i>
+                            <span>Registra Nuovo Ospite</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <a href="{{ url_for('guest_list') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-search me-2"></i>
+                            <span>Ricerca Ospiti</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <a href="{{ url_for('export_guests') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-file-excel me-2"></i>
+                            <span>Esporta Elenco in Excel</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

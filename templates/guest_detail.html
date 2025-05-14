@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Ancora CAS - Dettaglio Ospite{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h2 class="mb-0"><i class="fas fa-user me-2"></i>Dettaglio Ospite</h2>
+        <div>
+            <a href="{{ url_for('edit_guest', id=guest.id) }}" class="btn btn-light btn-sm">
+                <i class="fas fa-edit me-1"></i> Modifica
+            </a>
+            <button type="button" class="btn btn-danger btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#deleteGuestModal">
+                <i class="fas fa-trash me-1"></i> Elimina
+            </button>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <div class="row">
+            <!-- Informazioni di base -->
+            <div class="col-md-12 mb-4">
+                <h4 class="border-bottom pb-2 text-primary">
+                    <i class="fas fa-user me-2"></i>Dati Personali
+                </h4>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Nome:</dt>
+                            <dd class="col-sm-8">{{ guest.nome }}</dd>
+                            
+                            <dt class="col-sm-4">Cognome:</dt>
+                            <dd class="col-sm-8">{{ guest.cognome }}</dd>
+                            
+                            <dt class="col-sm-4">Data di Nascita:</dt>
+                            <dd class="col-sm-8">{{ guest.data_nascita.strftime('%d/%m/%Y') }}</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Sesso:</dt>
+                            <dd class="col-sm-8">{{ 'Maschio' if guest.sesso == 'M' else 'Femmina' }}</dd>
+                            
+                            <dt class="col-sm-4">Paese di Nascita:</dt>
+                            <dd class="col-sm-8">{{ guest.paese_nascita }}</dd>
+                            
+                            <dt class="col-sm-4">Codice Fiscale:</dt>
+                            <dd class="col-sm-8">
+                                <span class="badge bg-primary">{{ guest.codice_fiscale }}</span>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Permesso di soggiorno -->
+            <div class="col-md-12 mb-4">
+                <h4 class="border-bottom pb-2 text-primary">
+                    <i class="fas fa-id-card me-2"></i>Permesso di Soggiorno
+                </h4>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Numero Permesso:</dt>
+                            <dd class="col-sm-8">{{ guest.numero_permesso }}</dd>
+                            
+                            <dt class="col-sm-4">Data Rilascio:</dt>
+                            <dd class="col-sm-8">{{ guest.data_rilascio_permesso.strftime('%d/%m/%Y') }}</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Data Scadenza:</dt>
+                            <dd class="col-sm-8">
+                                {% if guest.data_scadenza_permesso %}
+                                    {% if guest.data_scadenza_permesso <= now.date() %}
+                                        <span class="badge bg-danger">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>
+                                            {{ guest.data_scadenza_permesso.strftime('%d/%m/%Y') }}
+                                        </span>
+                                    {% elif (guest.data_scadenza_permesso - now.date()).days <= 30 %}
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-clock me-1"></i>
+                                            {{ guest.data_scadenza_permesso.strftime('%d/%m/%Y') }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-success">
+                                            {{ guest.data_scadenza_permesso.strftime('%d/%m/%Y') }}
+                                        </span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary">Non disponibile</span>
+                                {% endif %}
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alloggio -->
+            <div class="col-md-12 mb-4">
+                <h4 class="border-bottom pb-2 text-primary">
+                    <i class="fas fa-home me-2"></i>Alloggio
+                </h4>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Numero Stanza:</dt>
+                            <dd class="col-sm-8">{{ guest.numero_stanza }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Informazioni di sistema -->
+            <div class="col-md-12">
+                <h4 class="border-bottom pb-2 text-primary">
+                    <i class="fas fa-info-circle me-2"></i>Informazioni di Sistema
+                </h4>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Creato il:</dt>
+                            <dd class="col-sm-8">{{ guest.created_at.strftime('%d/%m/%Y %H:%M') }}</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Ultima modifica:</dt>
+                            <dd class="col-sm-8">{{ guest.updated_at.strftime('%d/%m/%Y %H:%M') }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4 d-flex justify-content-between">
+            <a href="{{ url_for('guest_list') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Torna alla Lista
+            </a>
+            <a href="{{ url_for('edit_guest', id=guest.id) }}" class="btn btn-primary">
+                <i class="fas fa-edit me-2"></i>Modifica
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal di conferma eliminazione -->
+<div class="modal fade" id="deleteGuestModal" tabindex="-1" aria-labelledby="deleteGuestModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteGuestModalLabel"><i class="fas fa-exclamation-triangle me-2"></i>Conferma Eliminazione</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Sei sicuro di voler eliminare l'ospite <strong>{{ guest.nome }} {{ guest.cognome }}</strong>?</p>
+                <p class="text-danger">Questa azione non può essere annullata.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                <form action="{{ url_for('delete_guest', id=guest.id) }}" method="POST">
+                    <button type="submit" class="btn btn-danger">Elimina</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

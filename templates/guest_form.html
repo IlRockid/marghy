@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        <h2 class="mb-0">
+            {% if guest %}
+                <i class="fas fa-user-edit me-2"></i>Modifica Ospite
+            {% else %}
+                <i class="fas fa-user-plus me-2"></i>Registrazione Nuovo Ospite
+            {% endif %}
+        </h2>
+    </div>
+    <div class="card-body">
+        <form method="POST" class="needs-validation" id="guestForm" novalidate>
+            {{ form.csrf_token }}
+            
+            <!-- Dati Personali -->
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <h4 class="border-bottom pb-2 text-primary">
+                        <i class="fas fa-user me-2"></i>Dati Personali
+                    </h4>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        {{ form.cognome.label(class="form-label") }}
+                        {{ form.cognome(class="form-control" + (" is-invalid" if form.cognome.errors else ""), placeholder="Inserire il cognome") }}
+                        {% if form.cognome.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.cognome.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        {{ form.nome.label(class="form-label") }}
+                        {{ form.nome(class="form-control" + (" is-invalid" if form.nome.errors else ""), placeholder="Inserire il nome") }}
+                        {% if form.nome.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.nome.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-4 mb-3">
+                    <div class="form-group">
+                        {{ form.data_nascita.label(class="form-label") }}
+                        {{ form.data_nascita(class="form-control" + (" is-invalid" if form.data_nascita.errors else ""), type="date") }}
+                        {% if form.data_nascita.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.data_nascita.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <small class="form-text text-muted">Formato: gg/mm/aaaa</small>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="form-group">
+                        {{ form.sesso.label(class="form-label") }}
+                        {{ form.sesso(class="form-select" + (" is-invalid" if form.sesso.errors else "")) }}
+                        {% if form.sesso.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.sesso.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="form-group">
+                        {{ form.paese_nascita.label(class="form-label") }}
+                        {{ form.paese_nascita(class="form-control" + (" is-invalid" if form.paese_nascita.errors else ""), placeholder="Es: Italia, Marocco, ecc.") }}
+                        {% if form.paese_nascita.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.paese_nascita.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Per l'estero, indicare la nazione</div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="form-group">
+                        {{ form.provincia_nascita.label(class="form-label") }}
+                        {{ form.provincia_nascita(class="form-control text-uppercase" + (" is-invalid" if form.provincia_nascita.errors else ""), placeholder="Es: SV", maxlength="2") }}
+                        {% if form.provincia_nascita.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.provincia_nascita.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Solo per nascita in Italia (es. SV per Savona)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        {{ form.codice_fiscale_display.label(class="form-label") }}
+                        {{ form.codice_fiscale_display(class="form-control auto-calc", readonly=true, placeholder="Viene calcolato automaticamente") }}
+                        <small class="form-text text-muted">Generato automaticamente dai dati anagrafici</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dati Permesso di soggiorno -->
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <h4 class="border-bottom pb-2 text-primary">
+                        <i class="fas fa-id-card me-2"></i>Dati Permesso di Soggiorno
+                    </h4>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        {{ form.numero_permesso.label(class="form-label") }}
+                        {{ form.numero_permesso(class="form-control" + (" is-invalid" if form.numero_permesso.errors else ""), placeholder="Inserire il numero del permesso") }}
+                        {% if form.numero_permesso.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.numero_permesso.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        {{ form.data_rilascio_permesso.label(class="form-label") }}
+                        {{ form.data_rilascio_permesso(class="form-control" + (" is-invalid" if form.data_rilascio_permesso.errors else ""), type="date") }}
+                        {% if form.data_rilascio_permesso.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.data_rilascio_permesso.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        {{ form.data_scadenza_display.label(class="form-label") }}
+                        {{ form.data_scadenza_display(class="form-control auto-calc", readonly=true, placeholder="Viene calcolato automaticamente") }}
+                        <small class="form-text text-muted">Calcolata automaticamente (6 mesi dalla data di rilascio)</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alloggio -->
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <h4 class="border-bottom pb-2 text-primary">
+                        <i class="fas fa-home me-2"></i>Alloggio
+                    </h4>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        {{ form.numero_stanza.label(class="form-label") }}
+                        {{ form.numero_stanza(class="form-control" + (" is-invalid" if form.numero_stanza.errors else ""), placeholder="Inserire il numero della stanza") }}
+                        {% if form.numero_stanza.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.numero_stanza.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pulsanti -->
+            <div class="row mt-4">
+                <div class="col-12 d-flex justify-content-between">
+                    <a href="{{ url_for('guest_list') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Torna alla Lista
+                    </a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Funzione per chiamare l'API e calcolare il codice fiscale
+        function calcolaCodiceFiscale() {
+            const nome = document.querySelector('input[name="nome"]').value;
+            const cognome = document.querySelector('input[name="cognome"]').value;
+            const dataNascita = document.querySelector('input[name="data_nascita"]').value;
+            const sesso = document.querySelector('select[name="sesso"]').value;
+            const paeseNascita = document.querySelector('input[name="paese_nascita"]').value;
+            
+            // Se tutti i campi necessari sono compilati
+            if (nome && cognome && dataNascita && paeseNascita && sesso) {
+                // Utilizza AJAX per calcolare il codice fiscale in tempo reale
+                fetch('/api/calcola-codice-fiscale', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nome: nome,
+                        cognome: cognome,
+                        data_nascita: dataNascita,
+                        sesso: sesso,
+                        paese_nascita: paeseNascita
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.codice_fiscale) {
+                        document.querySelector('input[name="codice_fiscale_display"]').value = data.codice_fiscale;
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore nel calcolo del codice fiscale:', error);
+                });
+            }
+        }
+        
+        // Funzione per calcolare la data di scadenza
+        function calcolaDataScadenza() {
+            const dataRilascio = document.querySelector('input[name="data_rilascio_permesso"]').value;
+            
+            if (dataRilascio) {
+                // Utilizza AJAX per calcolare la data di scadenza in tempo reale
+                fetch('/api/calcola-scadenza', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        data_rilascio: dataRilascio
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.data_scadenza) {
+                        document.querySelector('input[name="data_scadenza_display"]').value = data.data_scadenza;
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore nel calcolo della data di scadenza:', error);
+                });
+            }
+        }
+        
+        // Aggiungi listener agli input che influenzano il codice fiscale con evento input
+        // L'evento input è scatenato ogni volta che un utente cambia il valore
+        const campiCodiceFiscale = [
+            document.querySelector('input[name="nome"]'),
+            document.querySelector('input[name="cognome"]'),
+            document.querySelector('input[name="data_nascita"]'),
+            document.querySelector('select[name="sesso"]'),
+            document.querySelector('input[name="paese_nascita"]')
+        ];
+        
+        campiCodiceFiscale.forEach(campo => {
+            campo.addEventListener('input', calcolaCodiceFiscale);
+            campo.addEventListener('change', calcolaCodiceFiscale);
+        });
+        
+        // Aggiungi listener per la data di rilascio con evento input e change
+        const campoDataRilascio = document.querySelector('input[name="data_rilascio_permesso"]');
+        campoDataRilascio.addEventListener('input', calcolaDataScadenza);
+        campoDataRilascio.addEventListener('change', calcolaDataScadenza);
+        
+        // Calcola all'avvio se i campi sono già compilati (es. in modalità modifica)
+        setTimeout(() => {
+            calcolaCodiceFiscale();
+            calcolaDataScadenza();
+        }, 500);
+    });
+</script>
+{% endblock %}
